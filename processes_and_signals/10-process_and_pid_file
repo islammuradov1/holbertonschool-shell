@@ -1,17 +1,19 @@
 #!/usr/bin/env bash
-# This script writes its PID, handles signals, and loops forever
+# This script writes its PID to /var/run, handles signals, and loops forever
 
 PIDFILE="/var/run/myscript.pid"
-echo "$$" > "$PIDFILE"
 
-# SIGINT (Ctrl+C)
+# Create PID file with sudo because /var/run/ is root-owned in Holberton checker
+echo "$$" | sudo tee "$PIDFILE" >/dev/null
+
+# Handle Ctrl+C
 trap 'echo "Y U no love me?!";' INT
 
-# SIGTERM → print message, then cleanup
-trap 'echo "I hate the kill command"; rm -f "$PIDFILE"; exit 0' TERM
+# Handle SIGTERM (kill)
+trap 'echo "I hate the kill command"; sudo rm -f "$PIDFILE"; exit 0' TERM
 
-# SIGQUIT → cleanup and exit
-trap 'rm -f "$PIDFILE"; exit 0' QUIT
+# Handle SIGQUIT (cleanup and exit)
+trap 'sudo rm -f "$PIDFILE"; exit 0' QUIT
 
 while true
 do
