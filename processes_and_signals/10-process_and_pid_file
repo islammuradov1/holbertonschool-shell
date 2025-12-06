@@ -7,16 +7,11 @@ echo "$$" > "$PIDFILE"
 # SIGINT (Ctrl+C)
 trap 'echo "Y U no love me?!";' INT
 
-# SIGTERM (kill, pkill)
-trap 'echo "I hate the kill command";' TERM
+# SIGTERM → print message, then cleanup
+trap 'echo "I hate the kill command"; rm -f "$PIDFILE"; exit 0' TERM
 
-cleanup() {
-    rm -f "$PIDFILE"
-    exit 0
-}
-
-# Cleanup for SIGQUIT and SIGTERM
-trap cleanup QUIT TERM
+# SIGQUIT → cleanup and exit
+trap 'rm -f "$PIDFILE"; exit 0' QUIT
 
 while true
 do
