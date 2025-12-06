@@ -1,26 +1,25 @@
 #!/usr/bin/env bash
-# This script writes its PID to a file, handles signals and loops printing messages
+# This script writes its PID, handles signals, and loops forever
 
 PIDFILE="/var/run/myscript.pid"
-echo "$$" | sudo tee "$PIDFILE" >/dev/null
+echo "$$" > "$PIDFILE"
 
-# SIGINT → Ctrl+C
+# SIGINT (Ctrl+C)
 trap 'echo "Y U no love me?!";' INT
 
-# SIGTERM → pkill / kill
+# SIGTERM (kill, pkill)
 trap 'echo "I hate the kill command";' TERM
 
-# SIGQUIT or SIGTERM → cleanup + exit
 cleanup() {
-    sudo rm -f "$PIDFILE"
+    rm -f "$PIDFILE"
     exit 0
 }
+
+# Cleanup for SIGQUIT and SIGTERM
 trap cleanup QUIT TERM
 
-# Infinity loop
 while true
 do
     echo "To infinity and beyond"
     sleep 1
 done
-
