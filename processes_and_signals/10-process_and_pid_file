@@ -1,11 +1,26 @@
 #!/usr/bin/env bash
-# The script displays Process and PID file
-echo $$ | sudo tee /var/run/myscript.pid > /dev/null
-trap 'echo "I hate the kill command"; exit' SIGTERM
-trap 'echo "Y U no love me?!"; exit' SIGINT
-trap 'sudo rm -f /var/run/myscript.pid; exit' SIGQUIT SIGTERM
-while true; do
+# This script writes its PID to a file, handles signals and loops printing messages
+
+PIDFILE="/var/run/myscript.pid"
+echo "$$" | sudo tee "$PIDFILE" >/dev/null
+
+# SIGINT → Ctrl+C
+trap 'echo "Y U no love me?!";' INT
+
+# SIGTERM → pkill / kill
+trap 'echo "I hate the kill command";' TERM
+
+# SIGQUIT or SIGTERM → cleanup + exit
+cleanup() {
+    sudo rm -f "$PIDFILE"
+    exit 0
+}
+trap cleanup QUIT TERM
+
+# Infinity loop
+while true
+do
     echo "To infinity and beyond"
-    sleep 2
+    sleep 1
 done
 
