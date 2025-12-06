@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Writes PID to /var/run and handles SIGTERM
+touch /var/run/myscript.pid
 
 echo $$ > /var/run/myscript.pid
-
 trap 'echo "I hate the kill command"' TERM
 
 while true
