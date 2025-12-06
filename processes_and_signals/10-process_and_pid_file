@@ -1,12 +1,5 @@
 #!/usr/bin/env bash
 # Writes PID to /var/run and handles SIGTERM
-
 echo $$ > /var/run/myscript.pid
-
 trap 'echo "I hate the kill command"' TERM
-
-while true
-do
-    sleep 1
-done
-
+while true; do sleep 1; done
