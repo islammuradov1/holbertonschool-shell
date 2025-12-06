@@ -1,13 +1,12 @@
 #!/usr/bin/env bash
-# This script writes its PID to /var/run and handles SIGTERM
+# Writes PID to /var/run and handles SIGTERM
 
 echo $$ > /var/run/myscript.pid
 
-# Handle SIGTERM
 trap 'echo "I hate the kill command"' TERM
 
-# Keep the script alive so it can receive signals
 while true
 do
     sleep 1
 done
+
